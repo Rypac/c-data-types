@@ -74,8 +74,6 @@ void vector_##type##_release(struct vector_##type *vector)                     \
 }
 
 /* Defining vector functions from the initial definitions. */
-#ifndef VECTOR_DEFINE
-    #define VECTOR_DEFINE   VECTOR_FUNCTIONS
-    VECTOR_TEMPLATE
-    #undef VECTOR_DEFINE
-#endif
+#define VECTOR_DEFINE   VECTOR_FUNCTIONS
+VECTOR_TEMPLATE
+#undef VECTOR_DEFINE

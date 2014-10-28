@@ -28,14 +28,12 @@ struct matrix_##type * matrix_##type##_new(int cols, int rows);                \
 void matrix_##type##_release(struct matrix_##type *matrix);
 
 /* Defining the matrix prototypes from the initial definitions. */
-#ifndef MATRIX_DEFINE
-    #define MATRIX_DEFINE   MATRIX_PROTOTYPE
-    MATRIX_TEMPLATE
-    #undef MATRIX_DEFINE
-#endif
+#define MATRIX_DEFINE   MATRIX_PROTOTYPE
+MATRIX_TEMPLATE
+#undef MATRIX_DEFINE
 
 /* Generic matrix function accessors. */
-#define matrix(type)                    struct matrix_##type
+#define matrix(type)                    matrix_##type
 #define matrix_new(type, cols, rows)    matrix_##type##_new(cols, rows)
 #define matrix_release(type, matrix)    matrix_##type##_release(matrix)
 

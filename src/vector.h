@@ -34,14 +34,12 @@ type vector_##type##_max(const struct vector_##type *vector);                  \
 void vector_##type##_release(struct vector_##type *vector);
 
 /* Defining the vector prototypes from the initial definitions. */
-#ifndef VECTOR_DEFINE
-    #define VECTOR_DEFINE   VECTOR_PROTOTYPE
-    VECTOR_TEMPLATE
-    #undef VECTOR_DEFINE
-#endif
+#define VECTOR_DEFINE   VECTOR_PROTOTYPE
+VECTOR_TEMPLATE
+#undef VECTOR_DEFINE
 
 /* Generic vector function accessors. */
-#define vector(type)                    struct vector_##type
+#define vector(type)                    vector_##type
 #define vector_new(type, size)          vector_##type##_new(size)
 #define vector_copy(type, vector)       vector_##type##_copy(vector)
 #define vector_min(type, vector)        vector_##type##_min(vector)

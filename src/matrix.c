@@ -45,8 +45,6 @@ void matrix_##type##_release(struct matrix_##type *matrix)                     \
 }
 
 /* Defining matrix functions from the initial definitions. */
-#ifndef MATRIX_DEFINE
-    #define MATRIX_DEFINE   MATRIX_FUNCTIONS
-    MATRIX_TEMPLATE
-    #undef MATRIX_DEFINE
-#endif
+#define MATRIX_DEFINE   MATRIX_FUNCTIONS
+MATRIX_TEMPLATE
+#undef MATRIX_DEFINE
