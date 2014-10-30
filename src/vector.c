@@ -64,12 +64,13 @@ type vector_##type##_max(const struct vector_##type *vector)                   \
     return max;                                                                \
 }                                                                              \
                                                                                \
-void vector_##type##_release(struct vector_##type *vector)                     \
+void vector_##type##_release(struct vector_##type **vector)                    \
 {                                                                              \
-    if (vector)                                                                \
+    if (vector && *vector)                                                     \
     {                                                                          \
-        free(vector->data);                                                    \
-        free(vector);                                                          \
+        free((*vector)->data);                                                 \
+        free(*vector);                                                         \
+        *vector = NULL;                                                        \
     }                                                                          \
 }
 

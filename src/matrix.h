@@ -25,7 +25,7 @@ struct matrix_##type {                                                         \
                                                                                \
 struct matrix_##type * matrix_##type##_new(int cols, int rows);                \
                                                                                \
-void matrix_##type##_release(struct matrix_##type *matrix);
+void matrix_##type##_release(struct matrix_##type **matrix);
 
 /* Defining the matrix prototypes from the initial definitions. */
 #define MATRIX_DEFINE   MATRIX_PROTOTYPE
@@ -35,6 +35,6 @@ MATRIX_TEMPLATE
 /* Generic matrix function accessors. */
 #define matrix(type)                    matrix_##type
 #define matrix_new(type, cols, rows)    matrix_##type##_new(cols, rows)
-#define matrix_release(type, matrix)    matrix_##type##_release(matrix)
+#define matrix_release(type, matrix)    matrix_##type##_release(&matrix)
 
 #endif

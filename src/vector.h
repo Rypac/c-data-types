@@ -31,7 +31,7 @@ type vector_##type##_min(const struct vector_##type *vector);                  \
                                                                                \
 type vector_##type##_max(const struct vector_##type *vector);                  \
                                                                                \
-void vector_##type##_release(struct vector_##type *vector);
+void vector_##type##_release(struct vector_##type **vector);
 
 /* Defining the vector prototypes from the initial definitions. */
 #define VECTOR_DEFINE   VECTOR_PROTOTYPE
@@ -44,6 +44,6 @@ VECTOR_TEMPLATE
 #define vector_copy(type, vector)       vector_##type##_copy(vector)
 #define vector_min(type, vector)        vector_##type##_min(vector)
 #define vector_max(type, vector)        vector_##type##_max(vector)
-#define vector_release(type, vector)    vector_##type##_release(vector)
+#define vector_release(type, vector)    vector_##type##_release(&vector)
 
 #endif

@@ -30,17 +30,19 @@ struct matrix_##type * matrix_##type##_new(int cols, int rows)                 \
     return matrix;                                                             \
 }                                                                              \
                                                                                \
-void matrix_##type##_release(struct matrix_##type *matrix)                     \
+void matrix_##type##_release(struct matrix_##type **matrix)                    \
 {                                                                              \
-    if (matrix)                                                                \
+    if (matrix && *matrix)                                                     \
     {                                                                          \
-        for (int i = 0; i < matrix->rows; i++)                                 \
+        for (int i = 0; i < (*matrix)->rows; i++)                              \
         {                                                                      \
-            free(matrix->data[i]);                                             \
+            free((*matrix)->data[i]);                                          \
         }                                                                      \
                                                                                \
-        free(matrix->data);                                                    \
-        free(matrix);                                                          \
+        free((*matrix)->data);                                                 \
+        free(*matrix);                                                         \
+                                                                               \
+        *matrix = NULL;                                                        \
     }                                                                          \
 }
 
