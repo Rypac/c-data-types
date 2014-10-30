@@ -51,8 +51,8 @@ int main(int argc, char **argv)
     }
     printf("\n");
 
-    vector_int_release(ints);
-    vector_float_release(floats);
+    vector_int_release(&ints);
+    vector_float_release(&floats);
 
     // Test the same with a matrix.
     struct matrix_int *matrix = matrix_int_new(15, 10);
@@ -67,7 +67,7 @@ int main(int argc, char **argv)
     }
 
     matrix_printer(matrix);
-    matrix_int_release(matrix);
+    matrix_int_release(&matrix);
 
     // Using the generic vector(type) macro. IMHO these are much more
     // aesthetically pleasing.
