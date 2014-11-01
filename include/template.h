@@ -7,7 +7,7 @@
 
 #define STRING(x)                   # x
 
-#define CONCAT(a, b, c)             a ## b
+#define CONCAT(a, b)                a ## b
 #define CONCAT_3(a, b, c)           a ## b ## c
 #define CONCAT_4(a, b, c, d)        a ## b ## c ## d
 #define CONCAT_5(a, b, c, d, e)     a ## b ## c ## d ## e

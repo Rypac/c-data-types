@@ -10,7 +10,7 @@
 
 #include <template.h>
 
-/* Matrix protoype definitions. */
+/* Matrix prototype definitions. */
 #define MATRIX_PROTOTYPE(type)                                                 \
                                                                                \
 struct TYPE(matrix, type) {                                                    \

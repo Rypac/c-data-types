@@ -90,6 +90,17 @@ int main(int argc, char **argv)
     printf("Min: %f\n", vector_min(double, copy));
     printf("Max: %f\n", vector_max(double, copy));
 
+    printf("Copied vector size: %d\n", copy->size);
+
+    vector_resize(double, copy, 5);
+
+    printf("Copied vector size: %d\n", copy->size);
+    for (int i = 0; i < copy->size; i++)
+    {
+        printf("%f\n", copy->data[i]);
+    }
+    printf("\n");
+
     vector_release(double, vector);
     vector_release(double, copy);
 

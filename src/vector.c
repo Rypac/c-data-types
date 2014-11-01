@@ -42,6 +42,25 @@ struct TYPE(vector, type) * FUNCTION(vector, type, copy)(                      \
     return copy;                                                               \
 }                                                                              \
                                                                                \
+int FUNCTION(vector, type, resize)(                                            \
+    struct TYPE(vector, type) **vector,                                        \
+    int size)                                                                  \
+{                                                                              \
+    struct TYPE(vector, type) *new_vector =                                    \
+        realloc(*vector, size * sizeof(struct TYPE(vector, type)));            \
+                                                                               \
+    if (new_vector)                                                            \
+    {                                                                          \
+        *vector = new_vector;                                                  \
+        (*vector)->size = size;                                                \
+        return 0;                                                              \
+    }                                                                          \
+    else                                                                       \
+    {                                                                          \
+        return -1;                                                             \
+    }                                                                          \
+}                                                                              \
+                                                                               \
 type FUNCTION(vector, type, min)(const struct TYPE(vector, type) *vector)      \
 {                                                                              \
     type min = vector->data[0];                                                \
@@ -76,7 +95,7 @@ void FUNCTION(vector, type, release)(struct TYPE(vector, type) **vector)       \
     }                                                                          \
 }
 
-/* Define vector functions from the initial definitions. */
+/* Define vector functions from the provided definitions. */
 #define TEMPLATE   VECTOR_FUNCTIONS
 #include <vector.def>
 #undef TEMPLATE

@@ -10,7 +10,7 @@
 
 #include <template.h>
 
-/* Point protoype definitions. */
+/* Point prototype definitions. */
 #define POINT_PROTOTYPE(type)                                                  \
                                                                                \
 struct TYPE(point, type) {                                                     \
