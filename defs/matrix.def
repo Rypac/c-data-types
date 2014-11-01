@@ -1,0 +1,9 @@
+/*
+ * Definition of matrix types.
+ *
+ * Author:  Ryan Davis
+ * Date:    28/10/14
+ */
+
+TEMPLATE(int)
+TEMPLATE(double)

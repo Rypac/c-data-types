@@ -11,9 +11,10 @@
 /* Matrix function definitions. */
 #define MATRIX_FUNCTIONS(type)                                                 \
                                                                                \
-struct matrix_##type * matrix_##type##_new(int cols, int rows)                 \
+struct TYPE(matrix, type) * FUNCTION(matrix, type, new)(int cols, int rows)    \
 {                                                                              \
-    struct matrix_##type *matrix = malloc(sizeof(struct matrix_##type));       \
+    struct TYPE(matrix, type) *matrix =                                        \
+        malloc(sizeof(struct TYPE(matrix, type)));                             \
                                                                                \
     if (matrix)                                                                \
     {                                                                          \
@@ -30,7 +31,7 @@ struct matrix_##type * matrix_##type##_new(int cols, int rows)                 \
     return matrix;                                                             \
 }                                                                              \
                                                                                \
-void matrix_##type##_release(struct matrix_##type **matrix)                    \
+void FUNCTION(matrix, type, release)(struct TYPE(matrix, type) **matrix)       \
 {                                                                              \
     if (matrix && *matrix)                                                     \
     {                                                                          \
@@ -46,7 +47,7 @@ void matrix_##type##_release(struct matrix_##type **matrix)                    \
     }                                                                          \
 }
 
-/* Defining matrix functions from the initial definitions. */
-#define MATRIX_DEFINE   MATRIX_FUNCTIONS
-MATRIX_TEMPLATE
-#undef MATRIX_DEFINE
+/* Define matrix functions from the provided definitions. */
+#define TEMPLATE  MATRIX_FUNCTIONS
+#include <matrix.def>
+#undef TEMPLATE

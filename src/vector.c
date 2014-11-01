@@ -11,9 +11,10 @@
 /* Vector function definitions. */
 #define VECTOR_FUNCTIONS(type)                                                 \
                                                                                \
-struct vector_##type * vector_##type##_new(int size)                           \
+struct TYPE(vector, type) * FUNCTION(vector, type, new)(int size)              \
 {                                                                              \
-    struct vector_##type *vector = malloc(sizeof(struct vector_##type));       \
+    struct TYPE(vector, type) *vector =                                        \
+        malloc(sizeof(struct TYPE(vector, type)));                             \
                                                                                \
     if (vector)                                                                \
     {                                                                          \
@@ -24,10 +25,11 @@ struct vector_##type * vector_##type##_new(int size)                           \
     return vector;                                                             \
 }                                                                              \
                                                                                \
-struct vector_##type * vector_##type##_copy(                                   \
-    const struct vector_##type *vector)                                        \
+struct TYPE(vector, type) * FUNCTION(vector, type, copy)(                      \
+    const struct TYPE(vector, type) *vector)                                   \
 {                                                                              \
-    struct vector_##type *copy = vector_##type##_new(vector->size);            \
+    struct TYPE(vector, type) *copy =                                          \
+        FUNCTION(vector, type, new)(vector->size);                             \
                                                                                \
     if (copy)                                                                  \
     {                                                                          \
@@ -40,7 +42,7 @@ struct vector_##type * vector_##type##_copy(                                   \
     return copy;                                                               \
 }                                                                              \
                                                                                \
-type vector_##type##_min(const struct vector_##type *vector)                   \
+type FUNCTION(vector, type, min)(const struct TYPE(vector, type) *vector)      \
 {                                                                              \
     type min = vector->data[0];                                                \
                                                                                \
@@ -52,7 +54,7 @@ type vector_##type##_min(const struct vector_##type *vector)                   \
     return min;                                                                \
 }                                                                              \
                                                                                \
-type vector_##type##_max(const struct vector_##type *vector)                   \
+type FUNCTION(vector, type, max)(const struct TYPE(vector, type) *vector)      \
 {                                                                              \
     type max = vector->data[0];                                                \
                                                                                \
@@ -64,7 +66,7 @@ type vector_##type##_max(const struct vector_##type *vector)                   \
     return max;                                                                \
 }                                                                              \
                                                                                \
-void vector_##type##_release(struct vector_##type **vector)                    \
+void FUNCTION(vector, type, release)(struct TYPE(vector, type) **vector)       \
 {                                                                              \
     if (vector && *vector)                                                     \
     {                                                                          \
@@ -74,7 +76,7 @@ void vector_##type##_release(struct vector_##type **vector)                    \
     }                                                                          \
 }
 
-/* Defining vector functions from the initial definitions. */
-#define VECTOR_DEFINE   VECTOR_FUNCTIONS
-VECTOR_TEMPLATE
-#undef VECTOR_DEFINE
+/* Define vector functions from the initial definitions. */
+#define TEMPLATE   VECTOR_FUNCTIONS
+#include <vector.def>
+#undef TEMPLATE
