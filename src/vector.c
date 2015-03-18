@@ -15,12 +15,13 @@ struct TYPE(vector, type) * FUNCTION(vector, type, new)(int size)              \
 {                                                                              \
     struct TYPE(vector, type) *vector =                                        \
         malloc(sizeof(struct TYPE(vector, type)));                             \
-                                                                               \
-    if (vector)                                                                \
+    if (!vector)                                                               \
     {                                                                          \
-        vector->size = size;                                                   \
-        vector->data = malloc(size * sizeof(type));                            \
+        return NULL;                                                           \
     }                                                                          \
+                                                                               \
+    vector->size = size;                                                       \
+    vector->data = (size > 0) ? malloc(size * sizeof(type)) : NULL;            \
                                                                                \
     return vector;                                                             \
 }                                                                              \
@@ -30,66 +31,62 @@ struct TYPE(vector, type) * FUNCTION(vector, type, copy)(                      \
 {                                                                              \
     struct TYPE(vector, type) *copy =                                          \
         FUNCTION(vector, type, new)(vector->size);                             \
-                                                                               \
-    if (copy)                                                                  \
+    if (!copy)                                                                 \
     {                                                                          \
-        for (int i = 0; i < copy->size; i++)                                   \
-        {                                                                      \
-            copy->data[i] = vector->data[i];                                   \
-        }                                                                      \
+        return NULL;                                                           \
+    }                                                                          \
+                                                                               \
+    for (int i = 0; i < copy->size; i++)                                       \
+    {                                                                          \
+        copy->data[i] = vector->data[i];                                       \
     }                                                                          \
                                                                                \
     return copy;                                                               \
 }                                                                              \
                                                                                \
 int FUNCTION(vector, type, resize)(                                            \
-    struct TYPE(vector, type) **vector,                                        \
+    struct TYPE(vector, type) *vector,                                         \
     int size)                                                                  \
 {                                                                              \
-    struct TYPE(vector, type) *new_vector =                                    \
-        realloc(*vector, size * sizeof(struct TYPE(vector, type)));            \
-                                                                               \
-    if (new_vector)                                                            \
-    {                                                                          \
-        *vector = new_vector;                                                  \
-        (*vector)->size = size;                                                \
-        return 0;                                                              \
-    }                                                                          \
-    else                                                                       \
+    type resized_vector =  realloc(vector->data, size * sizeof(type));         \
+    if (!resized_vector)                                                       \
     {                                                                          \
         return -1;                                                             \
     }                                                                          \
+                                                                               \
+    vector->data = resized_vector;                                             \
+    vector->size = size;                                                       \
+    return 0;                                                                  \
 }                                                                              \
                                                                                \
-type FUNCTION(vector, type, min)(const struct TYPE(vector, type) *vector)      \
+int FUNCTION(vector, type, extend)(                                            \
+    struct TYPE(vector, type) *vector,                                         \
+    int size)                                                                  \
 {                                                                              \
-    type min = vector->data[0];                                                \
-                                                                               \
-    for (int i = 0; i < vector->size; i++)                                     \
-    {                                                                          \
-        min = (vector->data[i] < min) ? vector->data[i] : min;                 \
-    }                                                                          \
-                                                                               \
-    return min;                                                                \
+    return FUNCTION(vector, type, resize)(vector, vector->count + size);       \
 }                                                                              \
                                                                                \
-type FUNCTION(vector, type, max)(const struct TYPE(vector, type) *vector)      \
+int FUNCTION(vector, type, push_back)(                                         \
+    struct TYPE(vector, type) *vector,                                         \
+    type data)                                                                 \
 {                                                                              \
-    type max = vector->data[0];                                                \
-                                                                               \
-    for (int i = 0; i < vector->size; i++)                                     \
+    if (FUNCTION(vector, type, extend)(vector, 1) < 0)                         \
     {                                                                          \
-        max = (vector->data[i] > max) ? vector->data[i] : max;                 \
+        return -1;                                                             \
     }                                                                          \
                                                                                \
-    return max;                                                                \
+    vector->data[vector->count - 1] = data;                                    \
+    return 0;                                                                  \
 }                                                                              \
                                                                                \
 void FUNCTION(vector, type, release)(struct TYPE(vector, type) **vector)       \
 {                                                                              \
     if (vector && *vector)                                                     \
     {                                                                          \
-        free((*vector)->data);                                                 \
+        if (*(vector)->data)                                                   \
+        {                                                                      \
+            free((*vector)->data);                                             \
+        }                                                                      \
         free(*vector);                                                         \
         *vector = NULL;                                                        \
     }                                                                          \

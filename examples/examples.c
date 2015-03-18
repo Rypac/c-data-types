@@ -54,21 +54,6 @@ int main(int argc, char **argv)
     vector_int_release(&ints);
     vector_float_release(&floats);
 
-    // Test the same with a matrix.
-    struct matrix_int *matrix = matrix_int_new(15, 10);
-
-    // Fill the matrix.
-    for (int i = 0; i < matrix->rows; i++)
-    {
-        for (int j = 0; j < matrix->cols; j++)
-        {
-            matrix->data[i][j] = j;
-        }
-    }
-
-    matrix_printer(matrix);
-    matrix_int_release(&matrix);
-
     // Using the generic vector(type) macro. IMHO these are much more
     // aesthetically pleasing.
     struct vector(double) *vector = vector_new(double, 10);
@@ -103,6 +88,21 @@ int main(int argc, char **argv)
 
     vector_release(double, vector);
     vector_release(double, copy);
+
+    // Test the same with a matrix.
+    struct matrix_int *matrix = matrix_new(int, 15, 10);
+
+    // Fill the matrix.
+    for (int i = 0; i < matrix->rows; i++)
+    {
+        for (int j = 0; j < matrix->cols; j++)
+        {
+            matrix->data[i][j] = i + j;
+        }
+    }
+
+    matrix_printer(matrix);
+    matrix_release(int, matrix);
 
     return 0;
 }
