@@ -9,12 +9,12 @@
 #include <vector.h>
 
 /* Vector function definitions. */
-#define VECTOR_FUNCTIONS(type)                                                 \
+#define VECTOR_FUNCTIONS(name, type)                                           \
                                                                                \
-struct TYPE(vector, type) * FUNCTION(vector, type, new)(int size)              \
+static struct TYPE(vector, name) * FUNCTION(vector, name, new)(int size)       \
 {                                                                              \
-    struct TYPE(vector, type) *vector =                                        \
-        malloc(sizeof(struct TYPE(vector, type)));                             \
+    struct TYPE(vector, name) *vector =                                        \
+        malloc(sizeof(struct TYPE(vector, name)));                             \
     if (!vector)                                                               \
     {                                                                          \
         return NULL;                                                           \
@@ -26,11 +26,11 @@ struct TYPE(vector, type) * FUNCTION(vector, type, new)(int size)              \
     return vector;                                                             \
 }                                                                              \
                                                                                \
-struct TYPE(vector, type) * FUNCTION(vector, type, copy)(                      \
-    const struct TYPE(vector, type) *vector)                                   \
+static struct TYPE(vector, name) * FUNCTION(vector, name, copy)(               \
+    const struct TYPE(vector, name) *vector)                                   \
 {                                                                              \
-    struct TYPE(vector, type) *copy =                                          \
-        FUNCTION(vector, type, new)(vector->size);                             \
+    struct TYPE(vector, name) *copy =                                          \
+        FUNCTION(vector, name, new)(vector->size);                             \
     if (!copy)                                                                 \
     {                                                                          \
         return NULL;                                                           \
@@ -44,11 +44,11 @@ struct TYPE(vector, type) * FUNCTION(vector, type, copy)(                      \
     return copy;                                                               \
 }                                                                              \
                                                                                \
-int FUNCTION(vector, type, resize)(                                            \
-    struct TYPE(vector, type) *vector,                                         \
+static int FUNCTION(vector, name, resize)(                                     \
+    struct TYPE(vector, name) *vector,                                         \
     int size)                                                                  \
 {                                                                              \
-    type resized_vector =  realloc(vector->data, size * sizeof(type));         \
+    type *resized_vector =  realloc(vector->data, size * sizeof(type));        \
     if (!resized_vector)                                                       \
     {                                                                          \
         return -1;                                                             \
@@ -56,41 +56,53 @@ int FUNCTION(vector, type, resize)(                                            \
                                                                                \
     vector->data = resized_vector;                                             \
     vector->size = size;                                                       \
+                                                                               \
     return 0;                                                                  \
 }                                                                              \
                                                                                \
-int FUNCTION(vector, type, extend)(                                            \
-    struct TYPE(vector, type) *vector,                                         \
+static int FUNCTION(vector, name, extend)(                                     \
+    struct TYPE(vector, name) *vector,                                         \
     int size)                                                                  \
 {                                                                              \
-    return FUNCTION(vector, type, resize)(vector, vector->count + size);       \
+    return FUNCTION(vector, name, resize)(vector, vector->size + size);        \
 }                                                                              \
                                                                                \
-int FUNCTION(vector, type, push_back)(                                         \
-    struct TYPE(vector, type) *vector,                                         \
+static int FUNCTION(vector, name, push_back)(                                  \
+    struct TYPE(vector, name) *vector,                                         \
     type data)                                                                 \
 {                                                                              \
-    if (FUNCTION(vector, type, extend)(vector, 1) < 0)                         \
+    if (FUNCTION(vector, name, extend)(vector, 1) < 0)                         \
     {                                                                          \
         return -1;                                                             \
     }                                                                          \
                                                                                \
-    vector->data[vector->count - 1] = data;                                    \
+    vector->data[vector->size - 1] = data;                                     \
+                                                                               \
     return 0;                                                                  \
 }                                                                              \
                                                                                \
-void FUNCTION(vector, type, release)(struct TYPE(vector, type) **vector)       \
+static void FUNCTION(vector, name, release)(struct TYPE(vector, name) **vector)\
 {                                                                              \
     if (vector && *vector)                                                     \
     {                                                                          \
-        if (*(vector)->data)                                                   \
+        if ((*vector)->data)                                                   \
         {                                                                      \
             free((*vector)->data);                                             \
         }                                                                      \
         free(*vector);                                                         \
         *vector = NULL;                                                        \
     }                                                                          \
-}
+}                                                                              \
+                                                                               \
+/* Class definition */                                                         \
+const struct CLASS(vector, name, class) TYPE(vector, name) = {                 \
+    .new = &FUNCTION(vector, name, new),                                       \
+    .copy = &FUNCTION(vector, name, copy),                                     \
+    .resize = &FUNCTION(vector, name, resize),                                 \
+    .extend = &FUNCTION(vector, name, extend),                                 \
+    .push_back = &FUNCTION(vector, name, push_back),                           \
+    .release = &FUNCTION(vector, name, release)                                \
+};
 
 /* Define vector functions from the provided definitions. */
 #define TEMPLATE   VECTOR_FUNCTIONS

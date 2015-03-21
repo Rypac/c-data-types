@@ -11,46 +11,30 @@
 #include <template.h>
 
 /* Vector prototype definitions. */
-#define VECTOR_PROTOTYPE(type)                                                 \
+#define VECTOR_PROTOTYPE(name, type)                                           \
                                                                                \
-struct TYPE(vector, type) {                                                    \
+struct TYPE(vector, name) {                                                    \
     int size;                                                                  \
     type *data;                                                                \
 };                                                                             \
                                                                                \
-struct TYPE(vector, type) * FUNCTION(vector, type, new)(int size);             \
-                                                                               \
-struct TYPE(vector, type) * FUNCTION(vector, type, copy)(                      \
-    const struct TYPE(vector, type) *vector);                                  \
-                                                                               \
-int FUNCTION(vector, type, resize)(                                            \
-    struct TYPE(vector, type) *vector,                                         \
-    int size);                                                                 \
-                                                                               \
-int FUNCTION(vector, type, extend)(                                            \
-    struct TYPE(vector, type) *vector,                                         \
-    int size);                                                                 \
-                                                                               \
-int FUNCTION(vector, type, push_back)(                                         \
-    struct TYPE(vector, type) *vector,                                         \
-    type data);                                                                \
-                                                                               \
-                                                                               \
-void FUNCTION(vector, type, release)(struct TYPE(vector, type) **vector);
+/* Class definition */                                                         \
+extern const struct CLASS(vector, name, class) {                               \
+    struct TYPE(vector, name) * (*new)(int size);                              \
+    struct TYPE(vector, name) * (*copy)(const struct TYPE(vector, name) *vec); \
+    int (*resize)(struct TYPE(vector, name) *vec, int size);                   \
+    int (*extend)(struct TYPE(vector, name) *vec, int size);                   \
+    int (*push_back)(struct TYPE(vector, name) *vec, type data);               \
+    void (*release)(struct TYPE(vector, name) **vec);                          \
+} TYPE(vector, name);
 
-/* Generic vector function accessors. */
-#define vector(type)                    TYPE(vector, type)
-#define vector_new(type, size)          FUNCTION(vector, type, new)(size)
-#define vector_copy(type, v)            FUNCTION(vector, type, copy)(v)
-#define vector_resize(type, v, size)    FUNCTION(vector, type, resize)(v, size)
-#define vector_extend(type, v, size)    FUNCTION(vector, type, extend)(v, size)
-#define vector_push_back(type, v, data) FUNCTION(vector, type, push_back)(v, data)
-#define vector_release(type, v)         FUNCTION(vector, type, release)(&v)
+/* Nicer looking type accessor. */
+#define vector(type)    TYPE(vector, type)
 
 /* Vector iterator */
 #define foreach_vector(element, vector)                                        \
-    for (int i = 0; i < vector->count; ++i)                                    \
-        if ((element = vector->data[i]))
+    for (int __it__ = 0; __it__ < vector->size; ++__it__)                      \
+        if ((element = vector->data[__it__]))
 
 /* Define vector prototypes from the provided definitions. */
 #define TEMPLATE   VECTOR_PROTOTYPE

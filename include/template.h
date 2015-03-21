@@ -13,6 +13,7 @@
 #define CONCAT_5(a, b, c, d, e)     a ## b ## c ## d ## e
 
 #define TYPE(name, type)            CONCAT_3(name, _, type)
+#define CLASS(name, type, class)    CONCAT_5(name, _, type, _, class)
 #define FUNCTION(name, type, func)  CONCAT_5(name, _, type, _, func)
 
 #endif

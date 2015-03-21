@@ -5,6 +5,6 @@
  * Date:    28/10/14
  */
 
-TEMPLATE(int)
-TEMPLATE(double)
-TEMPLATE(float)
+TEMPLATE(int, int)
+TEMPLATE(double, double)
+TEMPLATE(float, float)
