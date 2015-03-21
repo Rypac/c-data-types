@@ -10,20 +10,27 @@
 
 int main(void)
 {
-    struct vector(int) *vec = vector(int).new(0);
+    struct vector_int *vec = vector_int.new(0);
 
-    for (int i = 1; i < 200; i *= 2)
+    vector_int.resize(vec, 1);
+    vec->elem[0] = 0;
+
+    for (int i = 1; vec->size < 10; i *= 2)
     {
-        vector(int).push_back(vec, i);
+        vector_int.push_back(vec, i);
     }
 
-    int i;
-    foreach_vector(i, vec)
+    foreach_vector(int, element, vec,
     {
-        printf("%d\n", i);
+        printf("%d\n", element);
+    })
+
+    while (vec->size > 0)
+    {
+        printf("%d\n", vector_int.pop_back(vec));
     }
 
-    vector(int).release(&vec);
+    vector_int.release(&vec);
 
     return 0;
 }

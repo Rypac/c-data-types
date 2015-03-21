@@ -15,26 +15,27 @@
                                                                                \
 struct TYPE(vector, name) {                                                    \
     int size;                                                                  \
-    type *data;                                                                \
+    type *elem;                                                                \
 };                                                                             \
                                                                                \
 /* Class definition */                                                         \
 extern const struct CLASS(vector, name, class) {                               \
     struct TYPE(vector, name) * (*new)(int size);                              \
     struct TYPE(vector, name) * (*copy)(const struct TYPE(vector, name) *vec); \
-    int (*resize)(struct TYPE(vector, name) *vec, int size);                   \
-    int (*extend)(struct TYPE(vector, name) *vec, int size);                   \
-    int (*push_back)(struct TYPE(vector, name) *vec, type data);               \
+    void (*resize)(struct TYPE(vector, name) *vec, int size);                  \
+    void (*push_back)(struct TYPE(vector, name) *vec, type data);              \
+    type (*pop_back)(struct TYPE(vector, name) *vec);                          \
     void (*release)(struct TYPE(vector, name) **vec);                          \
 } TYPE(vector, name);
 
-/* Nicer looking type accessor. */
-#define vector(type)    TYPE(vector, type)
-
 /* Vector iterator */
-#define foreach_vector(element, vector)                                        \
-    for (int __it__ = 0; __it__ < vector->size; ++__it__)                      \
-        if ((element = vector->data[__it__]))
+#define foreach_vector(_type_, _elem_, _vec_, _body_)                          \
+    if (_vec_ && _vec_->size > 0)                                              \
+    {                                                                          \
+        _type_ _elem_ = _vec_->elem[0];                                        \
+        for (int _i_ = 0; _i_ < _vec_->size; ++_i_, _elem_ = _vec_->elem[_i_]) \
+            _body_                                                             \
+    }
 
 /* Define vector prototypes from the provided definitions. */
 #define TEMPLATE   VECTOR_PROTOTYPE
