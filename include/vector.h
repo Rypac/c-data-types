@@ -14,26 +14,40 @@
 #define VECTOR_PROTOTYPE(name, type)                                           \
                                                                                \
 struct TYPE(vector, name) {                                                    \
-    int size;                                                                  \
-    type *elem;                                                                \
+    /* Public */                                                               \
+    int (*size)(const struct TYPE(vector, name) *vec);                         \
+    type (*elem)(const struct TYPE(vector, name) *vec, int index);             \
+    type (*first)(const struct TYPE(vector, name) *vec);                       \
+    type (*last)(const struct TYPE(vector, name) *vec);                        \
+                                                                               \
+    void (*resize)(struct TYPE(vector, name) *vec, int size);                  \
+    void (*insert)(struct TYPE(vector, name) *vec, type element, int index);   \
+    void (*push_back)(struct TYPE(vector, name) *vec, type data);              \
+    type (*pop_back)(struct TYPE(vector, name) *vec);                          \
+                                                                               \
+    struct TYPE(vector, name) * (*copy)(const struct TYPE(vector, name) *vec); \
+    void (*release)(struct TYPE(vector, name) **vec);                          \
+                                                                               \
+    /* Private */                                                              \
+    struct {                                                                   \
+        int size;                                                              \
+        type *elem;                                                            \
+    } internals;                                                               \
 };                                                                             \
                                                                                \
 /* Class definition */                                                         \
 extern const struct CLASS(vector, name, class) {                               \
     struct TYPE(vector, name) * (*new)(int size);                              \
-    struct TYPE(vector, name) * (*copy)(const struct TYPE(vector, name) *vec); \
-    void (*resize)(struct TYPE(vector, name) *vec, int size);                  \
-    void (*push_back)(struct TYPE(vector, name) *vec, type data);              \
-    type (*pop_back)(struct TYPE(vector, name) *vec);                          \
-    void (*release)(struct TYPE(vector, name) **vec);                          \
 } TYPE(vector, name);
 
 /* Vector iterator */
 #define foreach_vector(_type_, _elem_, _vec_, _body_)                          \
-    if (_vec_ && _vec_->size > 0)                                              \
+    if (_vec_ && _vec_->size(_vec_) > 0)                                       \
     {                                                                          \
-        _type_ _elem_ = _vec_->elem[0];                                        \
-        for (int _i_ = 0; _i_ < _vec_->size; ++_i_, _elem_ = _vec_->elem[_i_]) \
+        _type_ _elem_ = _vec_->first(_vec_);                                   \
+        for (int _i_ = 0;                                                      \
+            _i_ < _vec_->size(_vec_);                                          \
+            ++_i_, _elem_ = _vec_->elem(_vec_, _i_))                           \
             _body_                                                             \
     }
 

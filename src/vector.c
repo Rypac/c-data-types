@@ -11,33 +11,31 @@
 /* Vector function definitions. */
 #define VECTOR_FUNCTIONS(name, type)                                           \
                                                                                \
-static struct TYPE(vector, name) * FUNCTION(vector, name, new)(int size)       \
-{                                                                              \
-    struct TYPE(vector, name) *vector =                                        \
-        malloc(sizeof(struct TYPE(vector, name)));                             \
-    if (vector)                                                                \
-    {                                                                          \
-        vector->elem = (size > 0) ? malloc(size * sizeof(type)) : NULL;        \
-        vector->size = size;                                                   \
-    }                                                                          \
+static struct TYPE(vector, name) * FUNCTION(vector, name, new)(int size);      \
                                                                                \
-    return vector;                                                             \
-}                                                                              \
-                                                                               \
-static struct TYPE(vector, name) * FUNCTION(vector, name, copy)(               \
+static int FUNCTION(vector, name, size)(                                       \
     const struct TYPE(vector, name) *vector)                                   \
 {                                                                              \
-    struct TYPE(vector, name) *copy =                                          \
-        FUNCTION(vector, name, new)(vector->size);                             \
-    if (copy)                                                                  \
-    {                                                                          \
-        for (int i = 0; i < copy->size; i++)                                   \
-        {                                                                      \
-            copy->elem[i] = vector->elem[i];                                   \
-        }                                                                      \
-    }                                                                          \
+    return vector->internals.size;                                             \
+}                                                                              \
                                                                                \
-    return copy;                                                               \
+static type FUNCTION(vector, name, elem)(                                      \
+    const struct TYPE(vector, name) *vector,                                   \
+    int index)                                                                 \
+{                                                                              \
+    return vector->internals.elem[index];                                      \
+}                                                                              \
+                                                                               \
+static type FUNCTION(vector, name, first)(                                     \
+    const struct TYPE(vector, name) *vector)                                   \
+{                                                                              \
+    return vector->internals.elem[0];                                          \
+}                                                                              \
+                                                                               \
+static type FUNCTION(vector, name, last)(                                      \
+    const struct TYPE(vector, name) *vector)                                   \
+{                                                                              \
+    return vector->internals.elem[vector->internals.size - 1];                 \
 }                                                                              \
                                                                                \
 static void FUNCTION(vector, name, resize)(                                    \
@@ -46,55 +44,100 @@ static void FUNCTION(vector, name, resize)(                                    \
 {                                                                              \
     if (new_size > 0)                                                          \
     {                                                                          \
-        vector->elem = realloc(vector->elem, new_size * sizeof(type));         \
+        vector->internals.elem =                                               \
+            realloc(vector->internals.elem, new_size * sizeof(type));          \
     }                                                                          \
     else                                                                       \
     {                                                                          \
-        if (vector->elem)                                                      \
+        if (vector->internals.elem)                                            \
         {                                                                      \
-            free(vector->elem);                                                \
+            free(vector->internals.elem);                                      \
         }                                                                      \
-        vector->elem = NULL;                                                   \
+        vector->internals.elem = NULL;                                         \
     }                                                                          \
-    vector->size = new_size;                                                   \
+    vector->internals.size = new_size;                                         \
+}                                                                              \
+                                                                               \
+static void FUNCTION(vector, name, insert)(                                    \
+    struct TYPE(vector, name) *vector,                                         \
+    type element,                                                              \
+    int index)                                                                 \
+{                                                                              \
+    vector->internals.elem[index] = element;                                   \
 }                                                                              \
                                                                                \
 static void FUNCTION(vector, name, push_back)(                                 \
     struct TYPE(vector, name) *vector,                                         \
     type data)                                                                 \
 {                                                                              \
-    FUNCTION(vector, name, resize)(vector, vector->size + 1);                  \
-    vector->elem[vector->size - 1] = data;                                     \
+    FUNCTION(vector, name, resize)(vector, vector->internals.size + 1);        \
+    vector->internals.elem[vector->internals.size - 1] = data;                 \
 }                                                                              \
                                                                                \
 static type FUNCTION(vector, name, pop_back)(struct TYPE(vector, name) *vector)\
 {                                                                              \
-    type element = vector->elem[vector->size - 1];                             \
-    FUNCTION(vector, name, resize)(vector, vector->size - 1);                  \
+    type element = vector->internals.elem[vector->internals.size - 1];         \
+    FUNCTION(vector, name, resize)(vector, vector->internals.size - 1);        \
     return element;                                                            \
+}                                                                              \
+                                                                               \
+static struct TYPE(vector, name) * FUNCTION(vector, name, copy)(               \
+    const struct TYPE(vector, name) *vector)                                   \
+{                                                                              \
+    struct TYPE(vector, name) *copy =                                          \
+        FUNCTION(vector, name, new)(vector->internals.size);                   \
+    if (copy)                                                                  \
+    {                                                                          \
+        for (int i = 0; i < copy->internals.size; i++)                         \
+        {                                                                      \
+            copy->internals.elem[i] = vector->internals.elem[i];               \
+        }                                                                      \
+    }                                                                          \
+                                                                               \
+    return copy;                                                               \
 }                                                                              \
                                                                                \
 static void FUNCTION(vector, name, release)(struct TYPE(vector, name) **vector)\
 {                                                                              \
     if (vector && *vector)                                                     \
     {                                                                          \
-        if ((*vector)->elem)                                                   \
+        if ((*vector)->internals.elem)                                         \
         {                                                                      \
-            free((*vector)->elem);                                             \
+            free((*vector)->internals.elem);                                   \
         }                                                                      \
         free(*vector);                                                         \
         *vector = NULL;                                                        \
     }                                                                          \
 }                                                                              \
                                                                                \
+static struct TYPE(vector, name) * FUNCTION(vector, name, new)(int size)       \
+{                                                                              \
+    struct TYPE(vector, name) *vector =                                        \
+        malloc(sizeof(struct TYPE(vector, name)));                             \
+    if (vector)                                                                \
+    {                                                                          \
+        vector->internals.elem =                                               \
+            (size > 0) ? malloc(size * sizeof(type)) : NULL;                   \
+        vector->internals.size = size;                                         \
+                                                                               \
+        vector->size = &FUNCTION(vector, name, size);                          \
+        vector->elem = &FUNCTION(vector, name, elem);                          \
+        vector->first = &FUNCTION(vector, name, first);                        \
+        vector->last = &FUNCTION(vector, name, last);                          \
+        vector->insert = &FUNCTION(vector, name, insert);                      \
+        vector->resize = &FUNCTION(vector, name, resize);                      \
+        vector->push_back = &FUNCTION(vector, name, push_back);                \
+        vector->pop_back = &FUNCTION(vector, name, pop_back);                  \
+        vector->copy = &FUNCTION(vector, name, copy);                          \
+        vector->release = &FUNCTION(vector, name, release);                    \
+    }                                                                          \
+                                                                               \
+    return vector;                                                             \
+}                                                                              \
+                                                                               \
 /* Class definition */                                                         \
 const struct CLASS(vector, name, class) TYPE(vector, name) = {                 \
-    .new = &FUNCTION(vector, name, new),                                       \
-    .copy = &FUNCTION(vector, name, copy),                                     \
-    .resize = &FUNCTION(vector, name, resize),                                 \
-    .push_back = &FUNCTION(vector, name, push_back),                           \
-    .pop_back = &FUNCTION(vector, name, pop_back),                             \
-    .release = &FUNCTION(vector, name, release)                                \
+    .new = &FUNCTION(vector, name, new)                                        \
 };
 
 /* Define vector functions from the provided definitions. */

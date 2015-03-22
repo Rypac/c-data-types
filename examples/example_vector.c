@@ -12,25 +12,28 @@ int main(void)
 {
     struct vector_int *vec = vector_int.new(0);
 
-    vector_int.resize(vec, 1);
-    vec->elem[0] = 0;
+    vec->resize(vec, 1);
+    vec->insert(vec, 0, 0);
 
-    for (int i = 1; vec->size < 10; i *= 2)
+    for (int i = 1; vec->size(vec) < 10; i *= 2)
     {
-        vector_int.push_back(vec, i);
+        vec->push_back(vec, i);
     }
+
+    printf("First = %d\n", vec->first(vec));
+    printf("Last = %d\n", vec->last(vec));
 
     foreach_vector(int, element, vec,
     {
         printf("%d\n", element);
     })
 
-    while (vec->size > 0)
+    while (vec->size(vec) > 0)
     {
-        printf("%d\n", vector_int.pop_back(vec));
+        printf("%d\n", vec->pop_back(vec));
     }
 
-    vector_int.release(&vec);
+    vec->release(&vec);
 
     return 0;
 }
