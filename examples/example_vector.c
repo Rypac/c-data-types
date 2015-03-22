@@ -13,7 +13,7 @@
  * Simple test of a vector containing integer elements.
  * This demonstrates the methods available to the vector template container.
  */
-void int_test(void)
+void vector_int_test(void)
 {
     struct vector_int *vec = vector_int.new(0);
 
@@ -46,7 +46,7 @@ void int_test(void)
  * This test uses a vector template containing point_double elements, both of
  * which are generated from the template definitions.
  */
-void point_test(void)
+void vector_point_test(void)
 {
     struct vector_point_double *vec = vector_point_double.new(0);
 
@@ -73,8 +73,8 @@ void point_test(void)
 
 int main(void)
 {
-    int_test();
-    point_test();
+    vector_int_test();
+    vector_point_test();
 
     return 0;
 }

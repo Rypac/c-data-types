@@ -8,7 +8,7 @@
 #ifndef _MATRIX_H_
 #define _MATRIX_H_
 
-#include <template.h>
+#include "template.h"
 
 /* Matrix prototype definitions. */
 #define MATRIX_PROTOTYPE(type)                                                 \

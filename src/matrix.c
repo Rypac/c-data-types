@@ -6,7 +6,7 @@
  */
 
 #include <stdlib.h>
-#include <matrix.h>
+#include "matrix.h"
 
 /* Matrix function definitions. */
 #define MATRIX_FUNCTIONS(type)                                                 \
