@@ -10,50 +10,57 @@
 #include "vector.h"
 
 /*
- * Simple test of a vector containing integer elements.
- * This demonstrates the methods available to the vector template container.
+ * Simple example of a vector containing integer elements.
+ *
+ * This demonstrates use of the provided vector macros which are not confined to
+ * a specific type of vector container.
  */
-void vector_int_test(void)
+void vector_int_example(void)
 {
-    struct vector_int *vec = vector_int.new(0);
+    struct vector_int *vec;
+    vector_new(vec, 2);
+    vector_insert(vec, 1, 0);
+    vector_insert(vec, 5, 1);
 
-    vec->resize(vec, 1);
-    vec->insert(vec, 0, 0);
+    printf("Size = %d\n", vector_size(vec));
 
-    for (int i = 1; vec->size(vec) < 10; i *= 2)
+    for (int i = 1; vector_size(vec) < 10; i *= 2)
     {
-        vec->push_back(vec, i);
+        vector_push_back(vec, i);
     }
 
-    printf("First element = %d\n", vec->first(vec));
-    printf("Last element = %d\n", vec->last(vec));
-
-    foreach_vector(int, element, vec,
+    for (int i = 0; i < vector_size(vec); ++i)
     {
+        printf("%d: %d\n", i, vector_elem(vec, i));
+    }
+
+    while (vector_size(vec) > 0)
+    {
+        int element;
+        vector_pop_back(vec, element);
         printf("%d\n", element);
-    })
-
-    while (vec->size(vec) > 0)
-    {
-        printf("%d\n", vec->pop_back(vec));
     }
 
-    vec->release(&vec);
+    vector_release(vec);
 }
 
 /*
- * Test a template within a template.
- * This test uses a vector template containing point_double elements, both of
+ * Example of using a template within a template.
+ *
+ * This example uses a vector template containing point_double elements, both of
  * which are generated from the template definitions.
+ *
+ * The functions provided by the vector template are used here as can be seen by
+ * the long function names.
  */
-void vector_point_test(void)
+void vector_point_example(void)
 {
-    struct vector_point_double *vec = vector_point_double.new(0);
+    struct vector_point_double *vec = vector_point_double_new(0);
 
-    for (int i = 0; vec->size(vec) < 5; ++i)
+    for (int i = 0; vector_point_double_size(vec) < 5; ++i)
     {
         struct point_double *point = point_double.new(i, i, i);
-        vec->push_back(vec, point);
+        vector_point_double_push_back(vec, point);
     }
 
     foreach_vector(struct point_double *, point, vec,
@@ -62,19 +69,19 @@ void vector_point_test(void)
             point->x, point->y, point->z);
     })
 
-    while (vec->size(vec) > 0)
+    while (vector_point_double_size(vec) > 0)
     {
-        struct point_double *point = vec->pop_back(vec);
+        struct point_double *point = vector_point_double_pop_back(vec);
         point_double.release(&point);
     }
 
-    vec->release(&vec);
+    vector_point_double_release(&vec);
 }
 
 int main(void)
 {
-    vector_int_test();
-    vector_point_test();
+    vector_int_example();
+    vector_point_example();
 
     return 0;
 }
