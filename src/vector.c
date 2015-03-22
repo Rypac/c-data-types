@@ -23,22 +23,23 @@ struct vector_## name * vector_## name ##_new(int size)                        \
     return vector;                                                             \
 }                                                                              \
                                                                                \
-int vector_## name ##_size(const struct vector_## name *vector)                \
+inline int vector_## name ##_size(const struct vector_## name *vector)         \
 {                                                                              \
     return vector->size;                                                       \
 }                                                                              \
                                                                                \
-type vector_## name ##_elem(const struct vector_## name *vector, int index)    \
+inline type vector_## name ##_elem(                                            \
+    const struct vector_## name *vector, int index)                            \
 {                                                                              \
     return vector->elem[index];                                                \
 }                                                                              \
                                                                                \
-type vector_## name ##_first(const struct vector_## name *vector)              \
+inline type vector_## name ##_first(const struct vector_## name *vector)       \
 {                                                                              \
     return vector->elem[0];                                                    \
 }                                                                              \
                                                                                \
-type vector_## name ##_last(const struct vector_## name *vector)               \
+inline type vector_## name ##_last(const struct vector_## name *vector)        \
 {                                                                              \
     return vector->elem[vector->size - 1];                                     \
 }                                                                              \
@@ -60,7 +61,8 @@ void vector_## name ##_resize(struct vector_## name *vector, int new_size)     \
     vector->size = new_size;                                                   \
 }                                                                              \
                                                                                \
-void vector_## name ##_insert(struct vector_## name *v, type elem, int index)  \
+inline void vector_## name ##_insert(                                          \
+    struct vector_## name *v, type elem, int index)                            \
 {                                                                              \
     v->elem[index] = elem;                                                     \
 }                                                                              \
