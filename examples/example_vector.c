@@ -37,7 +37,7 @@ void vector_int_example(void)
     while (vector_size(vec) > 0)
     {
         int element;
-        vector_pop_back(vec, element);
+        vector_pop_back(vec, &element);
         printf("%d\n", element);
     }
 

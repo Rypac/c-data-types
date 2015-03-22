@@ -66,7 +66,7 @@ void vector_## name ##_release(struct vector_## name **vector);
 }
 
 #define vector_pop_back(v, element) {                                          \
-    element = (v)->elem[(v)->size - 1];                                        \
+    *element = (v)->elem[(v)->size - 1];                                       \
     vector_resize(v, (v)->size - 1);                                           \
 }
 
