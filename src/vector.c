@@ -11,13 +11,14 @@
 /* Vector function definitions. */
 #define VECTOR_FUNCTIONS(name, type)                                           \
                                                                                \
-struct vector_## name * vector_## name ##_new(int size)                        \
+struct vector_## name * vector_## name ##_new(int capacity)                    \
 {                                                                              \
     struct vector_## name *vector = malloc(sizeof(struct vector_## name));     \
     if (vector)                                                                \
     {                                                                          \
-        vector->elem = (size > 0) ? malloc(size * sizeof(type)) : NULL;        \
-        vector->size = size;                                                   \
+        vector->elem = (capacity > 0) ? malloc(capacity * sizeof(type)) : NULL;\
+        vector->capacity = capacity;                                           \
+        vector->size = 0;                                                      \
     }                                                                          \
                                                                                \
     return vector;                                                             \
@@ -26,6 +27,11 @@ struct vector_## name * vector_## name ##_new(int size)                        \
 inline int vector_## name ##_size(const struct vector_## name *vector)         \
 {                                                                              \
     return vector->size;                                                       \
+}                                                                              \
+                                                                               \
+inline int vector_## name ##_capacity(const struct vector_## name *vector)     \
+{                                                                              \
+    return vector->capacity;                                                   \
 }                                                                              \
                                                                                \
 inline type vector_## name ##_elem(                                            \
@@ -58,25 +64,42 @@ void vector_## name ##_resize(struct vector_## name *vector, int new_size)     \
         }                                                                      \
         vector->elem = NULL;                                                   \
     }                                                                          \
-    vector->size = new_size;                                                   \
+    vector->capacity = new_size;                                               \
 }                                                                              \
                                                                                \
-inline void vector_## name ##_insert(                                          \
-    struct vector_## name *v, type elem, int index)                            \
+inline void vector_## name ##_shrink(struct vector_## name *vector)            \
 {                                                                              \
-    v->elem[index] = elem;                                                     \
+    vector_## name ##_resize(vector, vector->size);                            \
+}                                                                              \
+                                                                               \
+void vector_## name ##_insert(                                                 \
+    struct vector_## name *vector, type element, int index)                    \
+{                                                                              \
+    if (index >= vector->size)                                                 \
+    {                                                                          \
+        vector_## name ##_push_back(vector, element);                          \
+    }                                                                          \
+    else                                                                       \
+    {                                                                          \
+        vector->elem[index] = element;                                         \
+    }                                                                          \
 }                                                                              \
                                                                                \
 void vector_## name ##_push_back(struct vector_## name *vector, type data)     \
 {                                                                              \
-    vector_## name ##_resize(vector, vector->size + 1);                        \
-    vector->elem[vector->size - 1] = data;                                     \
+    if (vector->size >= vector->capacity)                                      \
+    {                                                                          \
+        int new_capacity = (vector->size > 0) ? vector->size * 2 : 1;          \
+        vector_## name ##_resize(vector, new_capacity);                        \
+    }                                                                          \
+    vector->elem[vector->size] = data;                                         \
+    vector->size++;                                                            \
 }                                                                              \
                                                                                \
 type vector_## name ##_pop_back(struct vector_## name *vector)                 \
 {                                                                              \
     type element = vector->elem[vector->size - 1];                             \
-    vector_## name ##_resize(vector, vector->size - 1);                        \
+    vector->size--;                                                            \
     return element;                                                            \
 }                                                                              \
                                                                                \

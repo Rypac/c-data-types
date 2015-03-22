@@ -19,20 +19,33 @@ void vector_int_example(void)
 {
     struct vector_int *vec;
     vector_new(vec, 2);
+
+    printf("After initialisation:\n");
+    printf("Size = %d\n", vector_size(vec));
+    printf("Capacity = %d\n\n", vector_capacity(vec));
+
     vector_insert(vec, 1, 0);
     vector_insert(vec, 5, 1);
-
-    printf("Size = %d\n", vector_size(vec));
 
     for (int i = 1; vector_size(vec) < 10; i *= 2)
     {
         vector_push_back(vec, i);
     }
 
-    for (int i = 0; i < vector_size(vec); ++i)
+    foreach_vector(int, element, vec,
     {
-        printf("%d: %d\n", i, vector_elem(vec, i));
-    }
+        printf("%d\n", element);
+    })
+
+    printf("After adding elements:\n");
+    printf("Size = %d\n", vector_size(vec));
+    printf("Capacity = %d\n\n", vector_capacity(vec));
+
+    vector_shrink(vec);
+
+    printf("After shrinking:\n");
+    printf("Size = %d\n", vector_size(vec));
+    printf("Capacity = %d\n\n", vector_capacity(vec));
 
     while (vector_size(vec) > 0)
     {
