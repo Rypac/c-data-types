@@ -5,6 +5,8 @@
  * Date:    28/10/14
  */
 
+/*
+ * Each template is defined as TEMPLATE(name, type).
+ */
 TEMPLATE(int, int)
-TEMPLATE(double, double)
-TEMPLATE(float, float)
+TEMPLATE(point_double, struct point_double *)

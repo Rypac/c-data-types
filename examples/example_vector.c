@@ -6,9 +6,14 @@
  */
 
 #include <stdio.h>
-#include <vector.h>
+#include "point.h"
+#include "vector.h"
 
-int main(void)
+/*
+ * Simple test of a vector containing integer elements.
+ * This demonstrates the methods available to the vector template container.
+ */
+void int_test(void)
 {
     struct vector_int *vec = vector_int.new(0);
 
@@ -20,8 +25,8 @@ int main(void)
         vec->push_back(vec, i);
     }
 
-    printf("First = %d\n", vec->first(vec));
-    printf("Last = %d\n", vec->last(vec));
+    printf("First element = %d\n", vec->first(vec));
+    printf("Last element = %d\n", vec->last(vec));
 
     foreach_vector(int, element, vec,
     {
@@ -34,6 +39,42 @@ int main(void)
     }
 
     vec->release(&vec);
+}
+
+/*
+ * Test a template within a template.
+ * This test uses a vector template containing point_double elements, both of
+ * which are generated from the template definitions.
+ */
+void point_test(void)
+{
+    struct vector_point_double *vec = vector_point_double.new(0);
+
+    for (int i = 0; vec->size(vec) < 5; ++i)
+    {
+        struct point_double *point = point_double.new(i, i, i);
+        vec->push_back(vec, point);
+    }
+
+    foreach_vector(struct point_double *, point, vec,
+    {
+        printf("Point: x = %0.1f, y = %0.1f, z = %0.1f\n",
+            point->x, point->y, point->z);
+    })
+
+    while (vec->size(vec) > 0)
+    {
+        struct point_double *point = vec->pop_back(vec);
+        point_double.release(&point);
+    }
+
+    vec->release(&vec);
+}
+
+int main(void)
+{
+    int_test();
+    point_test();
 
     return 0;
 }

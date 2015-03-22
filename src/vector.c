@@ -6,7 +6,7 @@
  */
 
 #include <stdlib.h>
-#include <vector.h>
+#include "vector.h"
 
 /* Vector function definitions. */
 #define VECTOR_FUNCTIONS(name, type)                                           \

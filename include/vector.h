@@ -8,25 +8,25 @@
 #ifndef _VECTOR_H_
 #define _VECTOR_H_
 
-#include <template.h>
+#include "template.h"
 
 /* Vector prototype definitions. */
 #define VECTOR_PROTOTYPE(name, type)                                           \
                                                                                \
 struct TYPE(vector, name) {                                                    \
     /* Public */                                                               \
-    int (*size)(const struct TYPE(vector, name) *vec);                         \
-    type (*elem)(const struct TYPE(vector, name) *vec, int index);             \
-    type (*first)(const struct TYPE(vector, name) *vec);                       \
-    type (*last)(const struct TYPE(vector, name) *vec);                        \
+    int (*size)(const struct TYPE(vector, name) *this);                        \
+    type (*elem)(const struct TYPE(vector, name) *this, int index);            \
+    type (*first)(const struct TYPE(vector, name) *this);                      \
+    type (*last)(const struct TYPE(vector, name) *this);                       \
                                                                                \
-    void (*resize)(struct TYPE(vector, name) *vec, int size);                  \
-    void (*insert)(struct TYPE(vector, name) *vec, type element, int index);   \
-    void (*push_back)(struct TYPE(vector, name) *vec, type data);              \
-    type (*pop_back)(struct TYPE(vector, name) *vec);                          \
+    void (*resize)(struct TYPE(vector, name) *this, int size);                 \
+    void (*insert)(struct TYPE(vector, name) *this, type element, int index);  \
+    void (*push_back)(struct TYPE(vector, name) *this, type data);             \
+    type (*pop_back)(struct TYPE(vector, name) *this);                         \
                                                                                \
-    struct TYPE(vector, name) * (*copy)(const struct TYPE(vector, name) *vec); \
-    void (*release)(struct TYPE(vector, name) **vec);                          \
+    struct TYPE(vector, name) * (*copy)(const struct TYPE(vector, name) *this);\
+    void (*release)(struct TYPE(vector, name) **this);                         \
                                                                                \
     /* Private */                                                              \
     struct {                                                                   \

@@ -5,5 +5,7 @@
  * Date:    28/10/14
  */
 
-TEMPLATE(int)
-TEMPLATE(double)
+/*
+ * Each template is defined as TEMPLATE(name, type).
+ */
+TEMPLATE(double, double)
