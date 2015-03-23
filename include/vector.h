@@ -22,7 +22,7 @@ struct vector_## name {                                                        \
 }
 
 #define vector_init(v, cap) {                                                  \
-    (v)->elem = ((cap) > 0) ? malloc((cap) * sizeof((v)->elem)) : NULL;        \
+    (v)->elem = ((cap) > 0) ? calloc((cap), sizeof(*((v)->elem))) : NULL;      \
     (v)->capacity = (cap);                                                     \
     (v)->size = 0;                                                             \
 }
@@ -41,6 +41,10 @@ struct vector_## name {                                                        \
 
 #define vector_last(v)                                                         \
     (v)->elem[(v)->size - 1]
+
+#define vector_clear(v) {                                                      \
+    memset((v)->elem, 0, (v)->capacity * sizeof(*((v)->elem)));                \
+}
 
 #define vector_resize(v, new_cap) {                                            \
     (v)->elem = realloc((v)->elem, (new_cap) * sizeof(*((v)->elem)));          \
