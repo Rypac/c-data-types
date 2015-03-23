@@ -11,24 +11,32 @@
 #include "template.h"
 
 /* Point prototype definitions. */
-#define POINT_PROTOTYPE(name, type)                                            \
+#define POINT_PROTOTYPE(name, T)                                               \
                                                                                \
-struct TYPE(point, name) {                                                     \
-    type x;                                                                    \
-    type y;                                                                    \
-    type z;                                                                    \
-};                                                                             \
-                                                                               \
-/* Class definition */                                                         \
-extern const struct CLASS(point, name, class) {                                \
-    struct TYPE(point, name) * (*new)(type x, type y, type z);                 \
-    struct TYPE(point, name) * (*copy)(const struct TYPE(point, name) *point); \
-    void (*release)(struct TYPE(point, name) **point);                         \
-} TYPE(point, name);
+struct point_## name {                                                         \
+    T x;                                                                       \
+    T y;                                                                       \
+    T z;                                                                       \
+};
+
+#define point_create(p, _x, _y, _z) {                                          \
+    p = malloc(sizeof(*(p)));                                                  \
+    point_init(p, _x, _y, _z);                                                 \
+}
+
+#define point_init(p, _x, _y, _z) {                                            \
+    (p)->x = (_x);                                                             \
+    (p)->y = (_y);                                                             \
+    (p)->z = (_z);                                                             \
+}
+
+#define point_destroy(p) {                                                     \
+    free(p);                                                                   \
+}
 
 /* Define point prototypes from the provided definitions. */
 #define TEMPLATE    POINT_PROTOTYPE
-#include <point.def>
+#include "point.def"
 #undef TEMPLATE
 
 #endif

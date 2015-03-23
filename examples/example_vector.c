@@ -6,8 +6,8 @@
  */
 
 #include <stdio.h>
-#include "point.h"
 #include "vector.h"
+#include "point.h"
 
 /*
  * Simple example of a vector containing integer elements.
@@ -18,11 +18,11 @@
 void vector_int_example(void)
 {
     struct vector_int *vec;
-    vector_new(vec, 2);
+    vector_create(vec, 2);
 
     printf("After initialisation:\n");
-    printf("Size = %d\n", vector_size(vec));
-    printf("Capacity = %d\n\n", vector_capacity(vec));
+    printf("Size = %zu\n", vector_size(vec));
+    printf("Capacity = %zu\n\n", vector_capacity(vec));
 
     vector_insert(vec, 1, 0);
     vector_insert(vec, 5, 1);
@@ -38,14 +38,14 @@ void vector_int_example(void)
     })
 
     printf("After adding elements:\n");
-    printf("Size = %d\n", vector_size(vec));
-    printf("Capacity = %d\n\n", vector_capacity(vec));
+    printf("Size = %zu\n", vector_size(vec));
+    printf("Capacity = %zu\n\n", vector_capacity(vec));
 
     vector_shrink(vec);
 
     printf("After shrinking:\n");
-    printf("Size = %d\n", vector_size(vec));
-    printf("Capacity = %d\n\n", vector_capacity(vec));
+    printf("Size = %zu\n", vector_size(vec));
+    printf("Capacity = %zu\n\n", vector_capacity(vec));
 
     while (vector_size(vec) > 0)
     {
@@ -54,7 +54,7 @@ void vector_int_example(void)
         printf("%d\n", element);
     }
 
-    vector_release(vec);
+    vector_destroy(vec);
 }
 
 /*
@@ -68,27 +68,29 @@ void vector_int_example(void)
  */
 void vector_point_example(void)
 {
-    struct vector_point_double *vec = vector_point_double_new(0);
+    struct vector_point_double *vec;
+    vector_create(vec, 0);
 
-    for (int i = 0; vector_point_double_size(vec) < 5; ++i)
+    for (int i = 0; vector_size(vec) < 5; ++i)
     {
-        struct point_double *point = point_double.new(i, i, i);
-        vector_point_double_push_back(vec, point);
+        struct point_double *point;
+        point_create(point, i, i, i);
+        vector_push_back(vec, point);
     }
 
-    foreach_vector(struct point_double *, point, vec,
+    foreach_vector(struct point_double *, p, vec,
     {
-        printf("Point: x = %0.1f, y = %0.1f, z = %0.1f\n",
-            point->x, point->y, point->z);
+        printf("Point: x = %0.1f, y = %0.1f, z = %0.1f\n", p->x, p->y, p->z);
     })
 
-    while (vector_point_double_size(vec) > 0)
+    while (vector_size(vec) > 0)
     {
-        struct point_double *point = vector_point_double_pop_back(vec);
-        point_double.release(&point);
+        struct point_double *p;
+        vector_pop_back(vec, &p);
+        point_destroy(p);
     }
 
-    vector_point_double_release(&vec);
+    vector_release(vec);
 }
 
 int main(void)

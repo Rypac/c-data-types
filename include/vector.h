@@ -12,34 +12,23 @@
 #include "template.h"
 
 /* Vector prototype definitions. */
-#define VECTOR_PROTOTYPE(name, type)                                           \
+#define VECTOR_PROTOTYPE(name, T)                                              \
                                                                                \
 struct vector_## name {                                                        \
-    int size;                                                                  \
-    int capacity;                                                              \
-    type *elem;                                                                \
-};                                                                             \
-                                                                               \
-struct vector_## name * vector_## name ##_new(int capacity);                   \
-int vector_## name ##_size(const struct vector_## name *v);                    \
-int vector_## name ##_capacity(const struct vector_## name *v);                \
-type vector_## name ##_elem(const struct vector_## name *v, int index);        \
-type vector_## name ##_first(const struct vector_## name *v);                  \
-type vector_## name ##_last(const struct vector_## name *v);                   \
-void vector_## name ##_insert(struct vector_## name *v, type elem, int index); \
-void vector_## name ##_resize(struct vector_## name *v, int new_size);         \
-void vector_## name ##_push_back(struct vector_## name *v, type elem);         \
-type vector_## name ##_pop_back(struct vector_## name *v);                     \
-void vector_## name ##_release(struct vector_## name **vector);
+    size_t size;                                                               \
+    size_t capacity;                                                           \
+    T *elem;                                                                   \
+};
 
-#define vector_new(v, cap) {                                                   \
-    v = malloc(sizeof(*v));                                                    \
-    if (v)                                                                     \
-    {                                                                          \
-        (v)->elem = ((cap) > 0) ? malloc((cap) * sizeof((v)->elem)) : NULL;    \
-        (v)->capacity = (cap);                                                 \
-        (v)->size = 0;                                                         \
-    }                                                                          \
+#define vector_create(v, cap) {                                                \
+    v = malloc(sizeof(*(v)));                                                  \
+    vector_init(v, cap);                                                       \
+}
+
+#define vector_init(v, cap) {                                                  \
+    (v)->elem = ((cap) > 0) ? malloc((cap) * sizeof((v)->elem)) : NULL;        \
+    (v)->capacity = (cap);                                                     \
+    (v)->size = 0;                                                             \
 }
 
 #define vector_size(v)                                                         \
@@ -69,8 +58,7 @@ void vector_## name ##_release(struct vector_## name **vector);
 #define vector_push_back(v, element) {                                         \
     if ((v)->size >= (v)->capacity)                                            \
     {                                                                          \
-        int new_capacity = ((v)->size > 0) ? (v)->size * 2 : 1;                \
-        vector_resize(v, new_capacity);                                        \
+        vector_resize(v, (((v)->size > 0) ? (v)->size * 2 : 1));               \
     }                                                                          \
     (v)->elem[(v)->size] = (element);                                          \
     (v)->size++;                                                               \
@@ -82,33 +70,36 @@ void vector_## name ##_release(struct vector_## name **vector);
 }
 
 #define vector_insert(v, element, index) {                                     \
-    if (index >= (v)->size)                                                    \
+    if (index < (v)->size)                                                     \
     {                                                                          \
-        vector_push_back(v, element);                                          \
+        (v)->elem[(index)] = (element);                                        \
     }                                                                          \
     else                                                                       \
     {                                                                          \
-        (v)->elem[(index)] = (element);                                        \
+        vector_push_back(v, element);                                          \
     }                                                                          \
 }
 
 #define vector_release(v) {                                                    \
-    if (v)                                                                     \
+    if ((v)->elem)                                                             \
     {                                                                          \
-        if ((v)->elem)                                                         \
-        {                                                                      \
-            free((v)->elem);                                                   \
-        }                                                                      \
-        free(v);                                                               \
-        v = NULL;                                                              \
+        free((v)->elem);                                                       \
     }                                                                          \
+    (v)->capacity = 0;                                                         \
+    (v)->size = 0;                                                             \
+}
+
+#define vector_destroy(v) {                                                    \
+    vector_release(v);                                                         \
+    free(v);                                                                   \
 }
 
 #define foreach_vector(T, e, v, function) {                                    \
-    if (v && vector_size(v) > 0)                                               \
+    if (vector_size(v) > 0)                                                    \
     {                                                                          \
         T e = vector_first(v);                                                 \
-        for (int _i_ = 0; _i_ < vector_size(v); ++_i_, e = vector_elem(v, _i_))\
+        for (size_t _i_ = 0; _i_ < vector_size(v); ++_i_,                      \
+                e = vector_elem(v, _i_))                                       \
             function                                                           \
     }                                                                          \
 }
