@@ -42,10 +42,10 @@ struct vector_##name {                                                         \
     ((index) >= 0 && (index) < (v)->size) ? (v)->elem[(index)] : 0
 
 #define vector_first(v)                                                        \
-    ((v)->size > 0) ? vector_data(v)[0] : 0
+    ((v)->size > 0) ? (v)->elem[0] : 0
 
 #define vector_last(v)                                                         \
-    ((v)->size > 0) ? vector_data(v)[(v)->size - 1] : 0
+    ((v)->size > 0) ? (v)->elem[(v)->size - 1] : 0
 
 #define vector_clear(v) {                                                      \
     memset((v)->elem, 0, (v)->capacity * sizeof(*((v)->elem)));                \
@@ -112,14 +112,10 @@ struct vector_##name {                                                         \
     (v) = NULL;                                                                \
 }
 
-#define foreach_vector(T, e, v, function) {                                    \
-    if (vector_size(v) > 0)                                                    \
-    {                                                                          \
-        T e = vector_first(v);                                                 \
-        for (size_t _i_##e = 0; _i_##e < vector_size(v); ++_i_##e,             \
-                e = vector_at(v, _i_##e))                                      \
-            function                                                           \
-    }                                                                          \
+#define foreach_vector(T, e, v, loop_body) {                                   \
+    T e = vector_first(v);                                                     \
+    for (size_t _i_##e = 0; _i_##e < (v)->size; e = (v)->elem[++_i_##e])       \
+        loop_body                                                              \
 }
 
 /* Define vector prototypes from the XMACRO definitions. */

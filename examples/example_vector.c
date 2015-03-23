@@ -30,8 +30,6 @@ void vector_int_example(void)
     printf("First element = %d\n", vector_at(vec, 0));
     printf("Second element = %d\n", vector_data(vec)[1]);
 
-    //int a = vector_data(vec)[0];
-
     for (int i = 1; vector_size(vec) < 10; i *= 2)
     {
         vector_push_back(vec, i);
