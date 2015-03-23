@@ -27,6 +27,11 @@ void vector_int_example(void)
     vector_insert(vec, 1, 0);
     vector_insert(vec, 5, 1);
 
+    printf("First element = %d\n", vector_at(vec, 0));
+    printf("Second element = %d\n", vector_data(vec)[1]);
+
+    //int a = vector_data(vec)[0];
+
     for (int i = 1; vector_size(vec) < 10; i *= 2)
     {
         vector_push_back(vec, i);
@@ -49,8 +54,7 @@ void vector_int_example(void)
 
     while (vector_size(vec) > 0)
     {
-        int element;
-        vector_pop_back(vec, &element);
+        int element = vector_pop_back(vec);
         printf("%d\n", element);
     }
 
@@ -71,6 +75,11 @@ void vector_point_example(void)
     struct vector_point_double *vec;
     vector_create(vec, 0);
 
+    if (vector_first(vec))
+    {
+        printf("No element should exist!\n");
+    }
+
     for (int i = 0; vector_size(vec) < 5; ++i)
     {
         struct point_double *point;
@@ -85,9 +94,13 @@ void vector_point_example(void)
 
     while (vector_size(vec) > 0)
     {
-        struct point_double *p;
-        vector_pop_back(vec, &p);
+        struct point_double *p = vector_pop_back(vec);
         point_destroy(p);
+    }
+
+    if (vector_pop_back(vec))
+    {
+        printf("Popped of an element which should not exist!\n");
     }
 
     vector_release(vec);
