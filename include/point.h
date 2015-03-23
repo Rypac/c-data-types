@@ -1,14 +1,11 @@
 /*
  * Generic point type.
- *
- * Author:  Ryan Davis
- * Date:    28/10/14
  */
 
 #ifndef _POINT_H_
 #define _POINT_H_
 
-#include "template.h"
+#include <stdlib.h>
 
 /* Point prototype definitions. */
 #define POINT_PROTOTYPE(name, T)                                               \
@@ -19,9 +16,9 @@ struct point_## name {                                                         \
     T z;                                                                       \
 };
 
-#define point_create(p, _x, _y, _z) {                                          \
+#define point_create(p, x, y, z) {                                             \
     p = malloc(sizeof(*(p)));                                                  \
-    point_init(p, _x, _y, _z);                                                 \
+    point_init(p, x, y, z);                                                    \
 }
 
 #define point_init(p, _x, _y, _z) {                                            \
@@ -34,7 +31,7 @@ struct point_## name {                                                         \
     free(p);                                                                   \
 }
 
-/* Define point prototypes from the provided definitions. */
+/* Define point prototypes from the XMACRO definitions. */
 #define TEMPLATE    POINT_PROTOTYPE
 #include "point.def"
 #undef TEMPLATE

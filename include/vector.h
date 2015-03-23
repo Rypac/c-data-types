@@ -1,15 +1,11 @@
 /*
  * Generic vector type.
- *
- * Author:  Ryan Davis
- * Date:    28/10/14
  */
 
 #ifndef _VECTOR_H_
 #define _VECTOR_H_
 
 #include <stdlib.h>
-#include "template.h"
 
 /* Vector prototype definitions. */
 #define VECTOR_PROTOTYPE(name, T)                                              \
@@ -104,7 +100,7 @@ struct vector_## name {                                                        \
     }                                                                          \
 }
 
-/* Define vector prototypes from the provided definitions. */
+/* Define vector prototypes from the XMACRO definitions. */
 #define TEMPLATE   VECTOR_PROTOTYPE
 #include "vector.def"
 #undef TEMPLATE
