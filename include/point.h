@@ -17,8 +17,10 @@ struct point_## name {                                                         \
 };
 
 #define point_create(p, x, y, z) {                                             \
-    p = malloc(sizeof(*(p)));                                                  \
-    point_init(p, x, y, z);                                                    \
+    if (((p) = malloc(sizeof(*(p)))))                                          \
+    {                                                                          \
+       point_init(p, x, y, z);                                                 \
+    }                                                                          \
 }
 
 #define point_init(p, _x, _y, _z) {                                            \
