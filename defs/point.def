@@ -9,3 +9,4 @@
  * Each template is defined as TEMPLATE(name, type).
  */
 TEMPLATE(double, double)
+TEMPLATE(int, int)

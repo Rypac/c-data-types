@@ -17,8 +17,7 @@ struct vector_##name {                                                         \
 };
 
 #define vector_create(v, cap) {                                                \
-    if (((v) = malloc(sizeof(*(v)))))                                          \
-    {                                                                          \
+    if (((v) = malloc(sizeof(*(v))))) {                                        \
         vector_init(v, cap);                                                   \
     }                                                                          \
 }
@@ -39,13 +38,13 @@ struct vector_##name {                                                         \
     (v)->elem
 
 #define vector_at(v, index)                                                    \
-    ((index) >= 0 && (index) < (v)->size) ? (v)->elem[(index)] : 0
+    (v)->elem[(index)]
 
 #define vector_first(v)                                                        \
-    ((v)->size > 0) ? (v)->elem[0] : 0
+    (v)->elem[0]
 
 #define vector_last(v)                                                         \
-    ((v)->size > 0) ? (v)->elem[(v)->size - 1] : 0
+    (v)->elem[(v)->size - 1]
 
 #define vector_clear(v) {                                                      \
     memset((v)->elem, 0, (v)->capacity * sizeof(*((v)->elem)));                \
@@ -57,48 +56,39 @@ struct vector_##name {                                                         \
 }
 
 #define vector_extend(v, new_cap) {                                            \
-    if ((new_cap) > (v)->capacity)                                             \
-    {                                                                          \
+    if ((new_cap) > (v)->capacity) {                                           \
         vector_resize(v, new_cap);                                             \
     }                                                                          \
 }
 
 #define vector_shrink(v) {                                                     \
-    if ((v)->size > 0)                                                         \
-    {                                                                          \
+    if ((v)->size > 0) {                                                       \
         vector_resize(v, (v)->size);                                           \
-    }                                                                          \
-    else                                                                       \
-    {                                                                          \
+    } else {                                                                   \
         vector_release(v);                                                     \
     }                                                                          \
 }
 
 #define vector_push_back(v, element) {                                         \
-    if ((v)->size >= (v)->capacity)                                            \
-    {                                                                          \
+    if ((v)->size >= (v)->capacity) {                                          \
         vector_resize(v, (((v)->size > 0) ? (v)->size * 2 : 1));               \
     }                                                                          \
     (v)->elem[(v)->size++] = (element);                                        \
 }
 
 #define vector_pop_back(v)                                                     \
-    ((v)->size > 0) ? (v)->elem[--(v)->size] : 0
+    (v)->elem[--(v)->size]
 
 #define vector_insert(v, element, index) {                                     \
-    if (index < (v)->size)                                                     \
-    {                                                                          \
+    if (index < (v)->size) {                                                   \
         (v)->elem[(index)] = (element);                                        \
-    }                                                                          \
-    else                                                                       \
-    {                                                                          \
+    } else {                                                                   \
         vector_push_back(v, element);                                          \
     }                                                                          \
 }
 
 #define vector_release(v) {                                                    \
-    if ((v)->elem)                                                             \
-    {                                                                          \
+    if ((v)->elem) {                                                           \
         free((v)->elem);                                                       \
         (v)->elem = 0;                                                         \
     }                                                                          \
@@ -112,11 +102,12 @@ struct vector_##name {                                                         \
     (v) = NULL;                                                                \
 }
 
-#define foreach_vector(T, e, v, loop_body) {                                   \
-    T e = vector_first(v);                                                     \
-    for (size_t _i_##e = 0; _i_##e < (v)->size; e = (v)->elem[++_i_##e])       \
-        loop_body                                                              \
-}
+#define foreach_vector(T, e, v, loop_body)                                     \
+    if ((v)->size > 0) {                                                       \
+        T e = vector_first(v);                                                 \
+        for (size_t _i_##e = 0; _i_##e < (v)->size; e = (v)->elem[++_i_##e])   \
+            loop_body                                                          \
+    }
 
 /* Define vector prototypes from the XMACRO definitions. */
 #define TEMPLATE   VECTOR_PROTOTYPE

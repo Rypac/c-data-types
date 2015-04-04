@@ -10,3 +10,4 @@
  */
 TEMPLATE(int, int)
 TEMPLATE(point_double, struct point_double *)
+TEMPLATE(point_int, struct point_int)

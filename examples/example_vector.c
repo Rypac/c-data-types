@@ -30,13 +30,11 @@ void vector_int_example(void)
     printf("First element = %d\n", vector_at(vec, 0));
     printf("Second element = %d\n", vector_data(vec)[1]);
 
-    for (int i = 1; vector_size(vec) < 10; i *= 2)
-    {
+    for (int i = 1; vector_size(vec) < 10; i *= 2) {
         vector_push_back(vec, i);
     }
 
-    foreach_vector(int, element, vec,
-    {
+    foreach_vector(int, element, vec, {
         printf("%d\n", element);
     })
 
@@ -50,8 +48,7 @@ void vector_int_example(void)
     printf("Size = %zu\n", vector_size(vec));
     printf("Capacity = %zu\n\n", vector_capacity(vec));
 
-    while (vector_size(vec) > 0)
-    {
+    while (vector_size(vec) > 0) {
         int element = vector_pop_back(vec);
         printf("%d\n", element);
     }
@@ -73,32 +70,45 @@ void vector_point_example(void)
     struct vector_point_double *vec;
     vector_create(vec, 0);
 
-    if (vector_first(vec))
-    {
-        printf("No element should exist!\n");
-    }
-
-    for (int i = 0; vector_size(vec) < 5; ++i)
-    {
+    for (int i = 0; vector_size(vec) < 5; ++i) {
         struct point_double *point;
         point_create(point, i, i, i);
         vector_push_back(vec, point);
     }
 
-    foreach_vector(struct point_double *, p, vec,
-    {
+    foreach_vector(struct point_double *, p, vec, {
         printf("Point: x = %0.1f, y = %0.1f, z = %0.1f\n", p->x, p->y, p->z);
     })
 
-    while (vector_size(vec) > 0)
-    {
+    while (vector_size(vec) > 0) {
         struct point_double *p = vector_pop_back(vec);
         point_destroy(p);
     }
 
-    if (vector_pop_back(vec))
-    {
-        printf("Popped of an element which should not exist!\n");
+    vector_destroy(vec);
+}
+
+/*
+ * Example of using a non-pointer struct within a template.
+ */
+void vector_point_struct_example(void)
+{
+    struct vector_point_int *vec;
+    vector_create(vec, 0);
+
+    for (int i = 0; vector_size(vec) < 5; ++i) {
+        struct point_int p;
+        point_init(&p, i, i, i);
+        vector_push_back(vec, p);
+    }
+
+    foreach_vector(struct point_int, p, vec, {
+        printf("Point: x = %d, y = %d, z = %d\n", p.x, p.y, p.z);
+    })
+
+    while (vector_size(vec) > 0) {
+        struct point_int p = vector_pop_back(vec);
+        printf("Point: x = %d, y = %d, z = %d\n", p.x, p.y, p.z);
     }
 
     vector_release(vec);
@@ -108,6 +118,7 @@ int main(void)
 {
     vector_int_example();
     vector_point_example();
+    vector_point_struct_example();
 
     return 0;
 }
