@@ -11,8 +11,8 @@
 #define VECTOR_PROTOTYPE(name, T)                                              \
                                                                                \
 struct vector_##name {                                                         \
-    size_t size;                                                               \
-    size_t capacity;                                                           \
+    int size;                                                                  \
+    int capacity;                                                              \
     T *elem;                                                                   \
 };
 
@@ -24,8 +24,14 @@ struct vector_##name {                                                         \
 
 #define vector_init(v, cap) {                                                  \
     (v)->elem = ((cap) > 0) ? calloc((cap), sizeof(*((v)->elem))) : NULL;      \
-    (v)->capacity = (cap);                                                     \
     (v)->size = 0;                                                             \
+    (v)->capacity = (cap);                                                     \
+}
+
+#define vector_wrap(v, data, len, cap) {                                       \
+    (v)->elem = data;                                                          \
+    (v)->size = len;                                                           \
+    (v)->capacity = cap;                                                       \
 }
 
 #define vector_size(v)                                                         \
@@ -105,7 +111,7 @@ struct vector_##name {                                                         \
 #define foreach_vector(T, e, v, loop_body)                                     \
     if ((v)->size > 0) {                                                       \
         T e = vector_first(v);                                                 \
-        for (size_t _i_##e = 0; _i_##e < (v)->size; e = (v)->elem[++_i_##e])   \
+        for (int _i_##e = 0; _i_##e < (v)->size; e = (v)->elem[++_i_##e])      \
             loop_body                                                          \
     }
 

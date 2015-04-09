@@ -15,14 +15,13 @@
  * This demonstrates use of the provided vector macros which are not confined to
  * a specific type of vector container.
  */
-void vector_int_example(void)
-{
+void vector_int_example(void) {
     struct vector_int *vec;
     vector_create(vec, 2);
 
     printf("After initialisation:\n");
-    printf("Size = %zu\n", vector_size(vec));
-    printf("Capacity = %zu\n\n", vector_capacity(vec));
+    printf("Size = %d\n", vector_size(vec));
+    printf("Capacity = %d\n\n", vector_capacity(vec));
 
     vector_insert(vec, 1, 0);
     vector_insert(vec, 5, 1);
@@ -39,14 +38,14 @@ void vector_int_example(void)
     })
 
     printf("After adding elements:\n");
-    printf("Size = %zu\n", vector_size(vec));
-    printf("Capacity = %zu\n\n", vector_capacity(vec));
+    printf("Size = %d\n", vector_size(vec));
+    printf("Capacity = %d\n\n", vector_capacity(vec));
 
     vector_shrink(vec);
 
     printf("After shrinking:\n");
-    printf("Size = %zu\n", vector_size(vec));
-    printf("Capacity = %zu\n\n", vector_capacity(vec));
+    printf("Size = %d\n", vector_size(vec));
+    printf("Capacity = %d\n\n", vector_capacity(vec));
 
     while (vector_size(vec) > 0) {
         int element = vector_pop_back(vec);
@@ -65,8 +64,7 @@ void vector_int_example(void)
  * The functions provided by the vector template are used here as can be seen by
  * the long function names.
  */
-void vector_point_example(void)
-{
+void vector_point_example(void) {
     struct vector_point_double *vec;
     vector_create(vec, 0);
 
@@ -91,8 +89,7 @@ void vector_point_example(void)
 /*
  * Example of using a non-pointer struct within a template.
  */
-void vector_point_struct_example(void)
-{
+void vector_point_struct_example(void) {
     struct vector_point_int *vec;
     vector_create(vec, 0);
 
@@ -114,8 +111,7 @@ void vector_point_struct_example(void)
     vector_release(vec);
 }
 
-int main(void)
-{
+int main(void) {
     vector_int_example();
     vector_point_example();
     vector_point_struct_example();
