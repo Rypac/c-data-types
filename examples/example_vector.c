@@ -65,7 +65,7 @@ void vector_int_example(void) {
  * the long function names.
  */
 void vector_point_example(void) {
-    Vector_point_double *vec;
+    Vector_Point_double *vec;
     vector_create(vec, 0);
 
     for (int i = 0; vector_size(vec) < 5; ++i) {
@@ -90,7 +90,7 @@ void vector_point_example(void) {
  * Example of using a non-pointer struct within a template.
  */
 void vector_point_struct_example(void) {
-    Vector_point_int *vec;
+    Vector_Point_int *vec;
     vector_create(vec, 0);
 
     for (int i = 0; vector_size(vec) < 5; ++i) {

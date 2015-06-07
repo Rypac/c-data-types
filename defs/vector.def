@@ -9,5 +9,5 @@
  * Each template is defined as TEMPLATE(name, type).
  */
 TEMPLATE(int, int)
-TEMPLATE(point_double, struct point_double *)
-TEMPLATE(point_int, struct point_int)
+TEMPLATE(Point_double, struct point_double *)
+TEMPLATE(Point_int, struct point_int)
