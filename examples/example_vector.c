@@ -16,7 +16,7 @@
  * a specific type of vector container.
  */
 void vector_int_example(void) {
-    struct vector_int *vec;
+    Vector_int *vec;
     vector_create(vec, 2);
 
     printf("After initialisation:\n");
@@ -65,7 +65,7 @@ void vector_int_example(void) {
  * the long function names.
  */
 void vector_point_example(void) {
-    struct vector_point_double *vec;
+    Vector_point_double *vec;
     vector_create(vec, 0);
 
     for (int i = 0; vector_size(vec) < 5; ++i) {
@@ -90,7 +90,7 @@ void vector_point_example(void) {
  * Example of using a non-pointer struct within a template.
  */
 void vector_point_struct_example(void) {
-    struct vector_point_int *vec;
+    Vector_point_int *vec;
     vector_create(vec, 0);
 
     for (int i = 0; vector_size(vec) < 5; ++i) {
